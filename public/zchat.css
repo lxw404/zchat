@@ -1,0 +1,82 @@
+body{
+  background:
+    linear-gradient(27deg, #151515 5px, transparent 5px) 0 5px,
+    linear-gradient(207deg, #151515 5px, transparent 5px) 10px 0px,
+    linear-gradient(27deg, #222 5px, transparent 5px) 0px 10px,
+    linear-gradient(207deg, #222 5px, transparent 5px) 10px 5px,
+    linear-gradient(90deg, #1b1b1b 10px, transparent 10px),
+    linear-gradient(#1d1d1d 25%, #1a1a1a 25%, #1a1a1a 50%, transparent 50%, transparent 75%, #242424 75%, #242424);
+  background-color: #131313;
+  background-size: 20px 20px;
+}
+
+video{
+  width: 100%;
+  max-width: 400px;
+}
+
+img{
+  width: 100%;
+  max-width: 400px;
+}
+
+.con{
+  width: 100%;
+  padding: 20px 20px 0px 20px;
+}
+
+.row{
+  font-size: 1.2em;
+  padding: 0px 20px 20px 20px;
+  word-break: break-all;
+}
+
+.col{
+  border-radius: 5px;
+  box-shadow: 1px 1px 5px #CCC;
+  background-color: rgba(255,255,255,0.85);
+  padding: 15px;
+  color: #555;
+}
+
+.uimg {
+  float: left;
+  width: 40px;
+  height: 40px;
+  margin-top: 10px;
+  margin-right: 10px;
+  box-shadow: 1px 1px 5px #CCC;
+  content: url(https://cdn.pixabay.com/photo/2016/08/08/09/17/avatar-1577909_960_720.png);
+}
+
+.uname {
+  font-size: 0.8em;
+  color: #909090;
+}
+
+.bold{
+  font-weight: bold;
+}
+
+.it{
+  font-style: italic;
+}
+
+.blink_red{
+  animation: a_blink_red 0.5s infinite;
+  color: red;
+}
+@keyframes a_blink_red {
+  0% {opacity: 0;}
+  50% {opacity: 1;}
+  100% {opacity: 0;}
+}
+
+.rainbow {
+  background-image: -webkit-gradient( linear, right top, left top, color-stop(0, #f22), color-stop(0.15, #f2f), color-stop(0.3, #22f), color-stop(0.45, #2ff), color-stop(0.6, #2f2),color-stop(0.75, #2f2), color-stop(0.9, #ff2), color-stop(1, #f22) );
+  background-image: gradient( linear, right top, left top, color-stop(0, #f22), color-stop(0.15, #f2f), color-stop(0.3, #22f), color-stop(0.45, #2ff), color-stop(0.6, #2f2),color-stop(0.75, #2f2), color-stop(0.9, #ff2), color-stop(1, #f22) );
+  color:transparent;
+  border: 2px dotted white;
+  -webkit-background-clip: text;
+  background-clip: text;
+}

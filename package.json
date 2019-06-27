@@ -1,0 +1,12 @@
+{
+    "name": "zchat",
+    "description": "",
+    "version": "0.6.0",
+    "main": "server.js",
+    "author": "lxw404",
+    "license": "BSD-3-Clause-Attribution",
+    "dependencies": {
+        "express": "latest",
+        "readline": "latest"
+    }
+}
