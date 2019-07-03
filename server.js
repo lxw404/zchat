@@ -42,6 +42,13 @@ app.get('/*.js', function (req, res) {
     msgQueue = [];
 });
 
+app.get('/*.rq', function(req, res){
+    // Send data
+    var id = req.url.split('.')[0];
+    id = id.replace(/\/+/g, '');
+    res.send('avEl({data: "https://secondlife.com/app/image/f8b61a72-d21e-4d30-b42b-04a23fde9eda/1", id: "' + id + '"});');
+});
+
 // Listen on port
 var server = app.listen(8081, function () {
     var host = server.address().address;

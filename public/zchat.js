@@ -323,7 +323,7 @@ function appEl(obj){
                 var s = document.createElement('script');
                 s.src = obj.data[i].id + '.rq'; // Request extension
                 s.id = 'g_' + obj.data[i] + '_';
-                document.body.appendChild(s);
+                $('#req').append(s);
             }
             
             // Complete image/row creation
@@ -355,7 +355,7 @@ function onT(){
 	var s = document.createElement('script');
 	s.src = 'a' + jn.toString(16) + '.js';
 	s.id = 'rq_a' + jn.toString(16) + '.js';
-	document.body.appendChild(s);
+	$('#scr').append(s);
 }
 
 // Repeatedly poll the server
