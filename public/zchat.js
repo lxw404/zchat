@@ -70,6 +70,9 @@ function addT(t, str, reg, typ){
             var tmp = mat[0].split(';');
             var t1 = tmp[0].substring(1,tmp[0].length);
             var t2 = tmp[1].substring(0,tmp[1].length-1);
+            var t3 = [];
+            var t4 = '';
+            var t5 = '';
             i0 = t1.search(/\S/);
             if (i0 == -1){
                 i0 = 1;
@@ -78,9 +81,17 @@ function addT(t, str, reg, typ){
                 i0 = i0 + 1;
             }
             i1 = i0 + t1.trim().length;
-            console.log(i0 + ' -> ' + i1);
             t2 = t2.split(',');
-            console.log(t2);
+            for (var i=0; i<t2.length; i++){
+                t3 = t2[i].split('=');
+                t4 = t3[0].trim();
+                t5 = t3[t3.length-1].trim();
+                if (t4 == t5){
+                    t4 = 'color'; // Shortcut
+                }
+                t4 = t4.toLowerCase();
+                xd[t4] = t5;
+            }
         }
         d = mat[0].substring(i0, i1);
         t.push({
@@ -95,7 +106,7 @@ function addT(t, str, reg, typ){
 }
 
 // Parse a string and add to a given element
-function elP(el, str){
+function elP(el, str, scr){
     var tok = [];  // Sorted tokens
     var lel = {};  // Last element for nested tokens
     
@@ -173,6 +184,12 @@ function elP(el, str){
             // Image
             var g = document.createElement('img');
             g.src = tok[i].data;
+            if (scr){
+                g.addEventListener('load', function(){
+                    // Scroll to the bottom
+                    window.scrollTo(0,document.body.scrollHeight);
+                });
+            }
             el.appendChild(g);
             lel = g;
         }
@@ -187,6 +204,12 @@ function elP(el, str){
             s.type = tok[i].xd['vtyp'];
             s.src = tok[i].data;
             g.appendChild(s);
+            if (scr){
+                g.addEventListener('loadeddata', function(){
+                    // Scroll to the bottom
+                    window.scrollTo(0,document.body.scrollHeight);
+                });
+            }
             el.appendChild(g);
             lel = g;
         }
@@ -217,7 +240,25 @@ function elP(el, str){
         else if (tok[i].type == 6){
             // Formatting
             var g = document.createElement('span');
-            g.className = 'rainbow';
+            var ks = Object.keys(tok[i].xd);
+            var vv = '';
+            for (var k of ks){
+                vv = document.createElement('div');
+                vv.appendChild(document.createTextNode(tok[i].xd[k]));
+                vv = vv.innerHTML;
+                if (k == 'color'){
+                    if (vv == 'rainbow'){
+                        g.className += ' rainbow';
+                    }
+                    else if (vv == 'blink'){
+                        g.className += ' blink_red';
+                    }
+                    else {
+                        // Set specific color
+                        g.style.color = vv;
+                    }
+                }
+            }
             g.appendChild(document.createTextNode(tok[i].data));
             el.appendChild(g);
             lel = g;
@@ -231,28 +272,36 @@ function elP(el, str){
     return el;
 }
 
+// Execute JSONP embedded function on avatar image return
+function avEl(obj){
+    if ((obj.data != '') && (uStore[obj.id] != '_')){
+        // Add the image to the stylesheet
+        uStore[obj.id] = '_';  // Mark complete
+        styl = ' .g_' + obj.id + ' { content: url(' + obj.data + ') !important; } ';
+        $('#sty').append(document.createTextNode(styl));
+    }
+    
+    // Remove av script requests
+    $('#req').find('script').remove();
+}
+
 // Execute JSONP embedded function on returned data
 function appEl(obj){
     // Get container
-    //var c = $('#con');
     var c = document.getElementById('con');
     
     // Check if scroll is at bottom
-    //var scr = (($(window).scrollTop() + $(window).height()) == $(document).height());
-    //console.log(scr + ' ' + $(window).scrollTop() + ', ' + $(window).height() + ', ' + $(document).height());
     var scr = (($(window).scrollTop() + window.innerHeight) == $(document).height());
-    console.log(scr + ' ' + $(window).scrollTop() + ', ' + window.innerHeight + ', ' + $(document).height());
     
     // Create mutation observer
-    var obs = new MutationObserver(function(mutList){
-        if (obj.data.length > 0 && scr){
+    if (scr){
+        var obs = new MutationObserver(function(mutList){
             // Scroll to the bottom
             window.scrollTo(0,document.body.scrollHeight);
-        }
-        obs.disconnect();
-    });
-    obs.observe(c, {childList: true});
-    
+            obs.disconnect();  // Remove observer
+        });
+        obs.observe(c, {childList: true});
+    }
     
     // Loop through all messages
 	for (var i=0; i<obj.data.length; i++){
@@ -270,15 +319,11 @@ function appEl(obj){
             
             // Check if style for avatar image should be fetched
             if (uStore[obj.data[i].id] != '_'){
-                /*$.ajax({
-                    url: 'http://world.secondlife.com/resident/' + obj.data[i].id,
-                    type: 'GET',
-                    success: function(res) {
-                        var m = $(res).find('.parcelimg');
-                        $('#sty').innerHTML += '.g_' + obj.data[i].id + '{content: url(' + m[0].src + ') !important};';
-                        uStore[obj.data[i].id] = '_';
-                    }
-                });*/
+                // Fetch image
+                var s = document.createElement('script');
+                s.src = obj.data[i].id + '.rq'; // Request extension
+                s.id = 'g_' + obj.data[i] + '_';
+                document.body.appendChild(s);
             }
             
             // Complete image/row creation
@@ -286,9 +331,8 @@ function appEl(obj){
             r.appendChild(g);
             u.appendChild(document.createTextNode(obj.data[i].dname + ' (' +obj.data[i].uname + ')'));
             cc.appendChild(u);
-            cc = elP(cc, obj.data[i].data);  // Parse for syntax
+            cc = elP(cc, obj.data[i].data, scr);  // Parse for syntax
             r.appendChild(cc);
-            //c.append(r);
             c.appendChild(r);
         }
         else{
@@ -298,16 +342,11 @@ function appEl(obj){
 	}
 	
     // Remove all script requests
-	$('body').find('script').remove();
+	$('#scr').find('script').remove();
 	
     // If elements were added, increment the request number
 	if (obj.data.length > 0){
 		jn += 1;
-        /*console.log(scr);
-        if (scr){
-            // Scroll to the bottom
-            window.scrollTo(0,document.body.scrollHeight);
-        }*/
 	}
 }
 
