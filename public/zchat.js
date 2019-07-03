@@ -328,6 +328,8 @@ function appEl(obj){
             
             // Complete image/row creation
             g.className += ' g_' + obj.data[i].id;
+            g.src = '';
+            g.alt = '';
             r.appendChild(g);
             u.appendChild(document.createTextNode(obj.data[i].dname + ' (' +obj.data[i].uname + ')'));
             cc.appendChild(u);
