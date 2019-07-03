@@ -277,7 +277,7 @@ function avEl(obj){
     if ((obj.data != '') && (uStore[obj.id] != '_')){
         // Add the image to the stylesheet
         uStore[obj.id] = '_';  // Mark complete
-        styl = ' .g_' + obj.id + ' { content: url(' + obj.data + ') !important; } ';
+        styl = ' .g_' + obj.id + ' { background-image: url(' + obj.data + ') !important; } ';
         $('#sty').append(document.createTextNode(styl));
     }
     
