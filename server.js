@@ -47,7 +47,7 @@ var server = app.listen(8081, function () {
     var host = server.address().address;
     var port = server.address().port;
    
-    console.log("Example app listening at http://%s:%s", host, port);
+    console.log("ZChat server listening at http://localhost:%s", port);
     
     // Read input from user
     var rl = readline.createInterface({input: process.stdin, output: process.stdout});
