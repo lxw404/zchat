@@ -328,7 +328,7 @@ function appEl(obj){
             
             // Complete image/row creation
             g.className += ' g_' + obj.data[i].id;
-            g.src = '';
+            g.src = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII='; // Webkit fix
             g.alt = '';
             r.appendChild(g);
             u.appendChild(document.createTextNode(obj.data[i].dname + ' (' +obj.data[i].uname + ')'));
