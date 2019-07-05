@@ -106,7 +106,7 @@ function addT(t, str, reg, typ){
 }
 
 // Parse a string and add to a given element
-function elP(el, str, scr){
+function elP(el, str, scr, dat){
     var tok = [];  // Sorted tokens
     var lel = {};  // Last element for nested tokens
     
@@ -178,7 +178,13 @@ function elP(el, str, scr){
     for (var i=0; i<tok.length; i++){
         if (tok[i].type == 0){
             // Normal text
-            el.appendChild(document.createTextNode(tok[i].data));
+            var dd = tok[i].data;
+            if (i==0 && dd.substring(0,3) == '/me'){
+                // IC Chat
+                dd = dat.dname + dd.substring(3,dd.length);
+                el.removeChild(el.firstChild);
+            }
+            el.appendChild(document.createTextNode(dd));
         }
         else if (tok[i].type == 1){
             // Image
@@ -333,7 +339,7 @@ function appEl(obj){
             r.appendChild(g);
             u.appendChild(document.createTextNode(obj.data[i].dname + ' (' +obj.data[i].uname + ')'));
             cc.appendChild(u);
-            cc = elP(cc, obj.data[i].data, scr);  // Parse for syntax
+            cc = elP(cc, obj.data[i].data, scr, obj.data[i]);  // Parse for syntax
             r.appendChild(cc);
             c.appendChild(r);
         }
