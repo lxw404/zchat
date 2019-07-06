@@ -92,6 +92,18 @@ function addT(t, str, reg, typ){
                 t4 = t4.toLowerCase();
                 xd[t4] = t5;
             }
+            
+            // Check if contained in another token
+            var ti = t.find(function(e){
+                return ((ind >= e.ind) && (end <= e.end));
+            });
+            if (ti){
+                // 
+                
+                // Remove data
+                i0 = 0;
+                i1 = 0;
+            }
         }
         d = mat[0].substring(i0, i1);
         t.push({
@@ -294,7 +306,8 @@ function avEl(obj){
 // Execute JSONP embedded function on returned data
 function appEl(obj){
     console.log(obj.id);
-    if (obj.id == ('/a' + jn.toString(16) + '.js')){
+    var chk = obj.id.replace(/\//g,'');
+    if (chk == ('a' + jn.toString(16) + '.js')){
         // Get container
         var c = document.getElementById('con');
         
