@@ -293,69 +293,72 @@ function avEl(obj){
 
 // Execute JSONP embedded function on returned data
 function appEl(obj){
-    // Get container
-    var c = document.getElementById('con');
-    
-    // Check if scroll is at bottom
-    var scr = (($(window).scrollTop() + window.innerHeight) == $(document).height());
-    
-    // Create mutation observer
-    if (scr){
-        var obs = new MutationObserver(function(mutList){
-            // Scroll to the bottom
-            window.scrollTo(0,document.body.scrollHeight);
-            obs.disconnect();  // Remove observer
-        });
-        obs.observe(c, {childList: true});
-    }
-    
-    // Loop through all messages
-	for (var i=0; i<obj.data.length; i++){
-        if (!obj.data[i].uri){
-            // Create message content
-            var r = document.createElement('div');
-            var g = document.createElement('img');
-            var cc = document.createElement('div');
-            var u = document.createElement('div');
-            var s = document.createElement('span');
-            r.className = 'row';
-            g.className = 'uimg';
-            cc.className = 'col';
-            u.className = 'uname';
-            
-            // Check if style for avatar image should be fetched
-            if (uStore[obj.data[i].id] != '_'){
-                // Fetch image
-                var s = document.createElement('script');
-                s.src = obj.data[i].id + '.rq'; // Request extension
-                s.id = 'g_' + obj.data[i] + '_';
-                $('#req').append(s);
+    console.log(obj.id);
+    if (obj.id == ('/a' + jn.toString(16) + '.js')){
+        // Get container
+        var c = document.getElementById('con');
+        
+        // Check if scroll is at bottom
+        var scr = (($(window).scrollTop() + window.innerHeight) == $(document).height());
+        
+        // Create mutation observer
+        if (scr){
+            var obs = new MutationObserver(function(mutList){
+                // Scroll to the bottom
+                window.scrollTo(0,document.body.scrollHeight);
+                obs.disconnect();  // Remove observer
+            });
+            obs.observe(c, {childList: true});
+        }
+        
+        // Loop through all messages
+        for (var i=0; i<obj.data.length; i++){
+            if (!obj.data[i].uri){
+                // Create message content
+                var r = document.createElement('div');
+                var g = document.createElement('img');
+                var cc = document.createElement('div');
+                var u = document.createElement('div');
+                var s = document.createElement('span');
+                r.className = 'row';
+                g.className = 'uimg';
+                cc.className = 'col';
+                u.className = 'uname';
+                
+                // Check if style for avatar image should be fetched
+                if (uStore[obj.data[i].id] != '_'){
+                    // Fetch image
+                    var s = document.createElement('script');
+                    s.src = obj.data[i].id + '.rq'; // Request extension
+                    s.id = 'g_' + obj.data[i] + '_';
+                    $('#req').append(s);
+                }
+                
+                // Complete image/row creation
+                g.className += ' g_' + obj.data[i].id;
+                g.src = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII='; // Webkit fix
+                g.alt = '';
+                r.appendChild(g);
+                u.appendChild(document.createTextNode(obj.data[i].dname + ' (' +obj.data[i].uname + ')'));
+                cc.appendChild(u);
+                cc = elP(cc, obj.data[i].data, scr, obj.data[i]);  // Parse for syntax
+                r.appendChild(cc);
+                c.appendChild(r);
             }
-            
-            // Complete image/row creation
-            g.className += ' g_' + obj.data[i].id;
-            g.src = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII='; // Webkit fix
-            g.alt = '';
-            r.appendChild(g);
-            u.appendChild(document.createTextNode(obj.data[i].dname + ' (' +obj.data[i].uname + ')'));
-            cc.appendChild(u);
-            cc = elP(cc, obj.data[i].data, scr, obj.data[i]);  // Parse for syntax
-            r.appendChild(cc);
-            c.appendChild(r);
+            else{
+                // Change base URI
+                $('head base').attr('href', obj.data[i].uri);
+            }
         }
-        else{
-            // Change base URI
-            $('head base').attr('href', obj.data[i].uri);
+        
+        // Remove all script requests
+        $('#scr').find('script').remove();
+        
+        // If elements were added, increment the request number
+        if (obj.data.length > 0){
+            jn += 1;
         }
-	}
-	
-    // Remove all script requests
-	$('#scr').find('script').remove();
-	
-    // If elements were added, increment the request number
-	if (obj.data.length > 0){
-		jn += 1;
-	}
+    }
 }
 
 // Handle creating a script request
