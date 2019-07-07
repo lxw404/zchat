@@ -65,6 +65,14 @@ img{
   font-style: italic;
 }
 
+.udl{
+    text-decoration: underline;
+}
+
+.stk{
+    text-decoration: line-through;
+}
+
 .blink_red{
   animation: a_blink_red 0.5s infinite;
   color: red;

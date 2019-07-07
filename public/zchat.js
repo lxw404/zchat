@@ -1,6 +1,11 @@
 var uStore = {}; // Storage of avatar images
 var jn = 0;      // Current request number
 
+// Is an element contained within two index boundaries?
+function conT(e, ind, end){
+    return ((ind > e.ind) && (end < e.end));
+}
+
 // Append tokens to a list given a regular expression and a type
 function addT(t, str, reg, typ){
     var mat = '';
@@ -66,6 +71,16 @@ function addT(t, str, reg, typ){
             i1 = mat[0].length - 3;
         }
         else if (typ == 6){
+            // Underline
+            i0 = 1;
+            i1 = mat[0].length - 1;
+        }
+        else if (typ == 7){
+            // Strikethrough
+            i0 = 2;
+            i1 = mat[0].length - 2;
+        }
+        else if (typ == 8){
             // Formatting
             var tmp = mat[0].split(';');
             var t1 = tmp[0].substring(1,tmp[0].length);
@@ -91,18 +106,6 @@ function addT(t, str, reg, typ){
                 }
                 t4 = t4.toLowerCase();
                 xd[t4] = t5;
-            }
-            
-            // Check if contained in another token
-            var ti = t.find(function(e){
-                return ((ind >= e.ind) && (end <= e.end));
-            });
-            if (ti){
-                // 
-                
-                // Remove data
-                i0 = 0;
-                i1 = 0;
             }
         }
         d = mat[0].substring(i0, i1);
@@ -138,9 +141,17 @@ function elP(el, str, scr, dat){
     pat = /\*{1}.*?\*{1}/g;
     addT(tok, str, pat, 4);
     
+    // Find underline tokens
+    pat = /\_{1}.*?\_{1}/g;
+    addT(tok, str, pat, 6);
+    
+    // Find strikethrough tokens
+    pat = /\~{2}[^\s]+\~{2}/g;
+    addT(tok, str, pat, 7);
+    
     // Find formatting tokens
     pat = /\{[^\{]+\;.*?\}/g;
-    addT(tok, str, pat, 6);
+    addT(tok, str, pat, 8);
     
     // Find links
     pat = /\[([^\[]+)\]\(([^\)]+)\)/g;
@@ -160,7 +171,8 @@ function elP(el, str, scr, dat){
     });
     
     // Insert normal text tokens
-    var mind = 0;
+    var mind = 0;   // Minimum encountered index
+    var xind = 0;   // Maximum encountered index
     var tmp = 0;
     var ind = 0;
     for (var i=0; i<tok.length; i++){
@@ -176,14 +188,26 @@ function elP(el, str, scr, dat){
             i++;
         }
         mind = tmp;
+        if (mind > xind){
+            xind = mind;
+        }
     }
-    if (mind < str.length){
+    if (xind < str.length){
         tok.push({
             "type": 0,
-            "ind": mind,
+            "ind": xind,
             "end": str.length-1,
-            "data": str.substring(mind, str.length)
+            "data": str.substring(xind, str.length)
         });
+    }
+    
+    // Containment pass
+    var cn = -1;
+    for (var i=0; i<tok.length; i++){
+        cn = tok.findIndex(function(e){ return conT(e, tok[i].ind, tok[i].end) });
+        if (cn != -1){
+            tok[i]["con"] = cn;
+        }
     }
     
     // Loop through all tokens and append them to the element
@@ -209,7 +233,6 @@ function elP(el, str, scr, dat){
                 });
             }
             el.appendChild(g);
-            lel = g;
         }
         else if (tok[i].type == 2){
             // Video
@@ -229,35 +252,112 @@ function elP(el, str, scr, dat){
                 });
             }
             el.appendChild(g);
-            lel = g;
         }
         else if (tok[i].type == 3){
             // Bold
-            var g = document.createElement('span');
-            g.className = 'bold';
-            g.appendChild(document.createTextNode(tok[i].data));
-            el.appendChild(g);
-            lel = g;
+            var g = '';
+            if (tok[i].con != undefined){
+                g = tok[tok[i].con].e;
+                g.className += ' bold';
+                if (g.textContent.length > tok[i].data.length){
+                    g.removeChild(g.firstChild);
+                    g.appendChild(document.createTextNode(tok[i].data));
+                }
+            }
+            else {
+                g = document.createElement('span');
+                g.className = 'bold';
+                g.appendChild(document.createTextNode(tok[i].data));
+                el.appendChild(g);
+            }
+            tok[i]["e"] = g;
         }
         else if (tok[i].type == 4){
             // Italic
-            var g = document.createElement('span');
-            g.className = 'it';
-            g.appendChild(document.createTextNode(tok[i].data));
-            el.appendChild(g);
-            lel = g;
+            var g = '';
+            if (tok[i].con != undefined){
+                g = tok[tok[i].con].e;
+                g.className += ' it';
+                if (g.textContent.length > tok[i].data.length){
+                    g.removeChild(g.firstChild);
+                    g.appendChild(document.createTextNode(tok[i].data));
+                }
+            }
+            else {
+                g = document.createElement('span');
+                g.className = 'it';
+                g.appendChild(document.createTextNode(tok[i].data));
+                el.appendChild(g);
+            }
+            tok[i]["e"] = g;
         }
         else if (tok[i].type == 5){
             // Bold + Italic
-            var g = document.createElement('span');
-            g.className = 'bold it';
-            g.appendChild(document.createTextNode(tok[i].data));
-            el.appendChild(g);
-            lel = g;
+            var g = '';
+            if (tok[i].con != undefined){
+                g = tok[tok[i].con].e;
+                g.className += ' bold it';
+                if (g.textContent.length > tok[i].data.length){
+                    g.removeChild(g.firstChild);
+                    g.appendChild(document.createTextNode(tok[i].data));
+                }
+            }
+            else {
+                g = document.createElement('span');
+                g.className = 'bold it';
+                g.appendChild(document.createTextNode(tok[i].data));
+                el.appendChild(g);
+            }
+            tok[i]["e"] = g;
         }
         else if (tok[i].type == 6){
+            // Underline
+            var g = '';
+            if (tok[i].con != undefined){
+                g = tok[tok[i].con].e;
+                g.className += ' udl';
+                if (g.textContent.length > tok[i].data.length){
+                    g.removeChild(g.firstChild);
+                    g.appendChild(document.createTextNode(tok[i].data));
+                }
+            }
+            else {
+                g = document.createElement('span');
+                g.className = 'udl';
+                g.appendChild(document.createTextNode(tok[i].data));
+                el.appendChild(g);
+            }
+            tok[i]["e"] = g;
+        }
+        else if (tok[i].type == 7){
+            // Strikethrough
+            var g = '';
+            if (tok[i].con != undefined){
+                g = tok[tok[i].con].e;
+                g.className += ' stk';
+                if (g.textContent.length > tok[i].data.length){
+                    g.removeChild(g.firstChild);
+                    g.appendChild(document.createTextNode(tok[i].data));
+                }
+            }
+            else {
+                g = document.createElement('span');
+                g.className = 'stk';
+                g.appendChild(document.createTextNode(tok[i].data));
+                el.appendChild(g);
+            }
+            tok[i]["e"] = g;
+        }
+        else if (tok[i].type == 8){
             // Formatting
-            var g = document.createElement('span');
+            var c = tok[i].con;
+            var g = '';
+            if (c != undefined){
+                g = tok[c].e;
+            }
+            else {
+                g = document.createElement('span');
+            }
             var ks = Object.keys(tok[i].xd);
             var vv = '';
             for (var k of ks){
@@ -277,9 +377,15 @@ function elP(el, str, scr, dat){
                     }
                 }
             }
-            g.appendChild(document.createTextNode(tok[i].data));
-            el.appendChild(g);
-            lel = g;
+            if (c == undefined){
+                g.appendChild(document.createTextNode(tok[i].data));
+                el.appendChild(g);
+            }
+            else if (g.textContent.length > tok[i].data.length){
+                g.removeChild(g.firstChild);
+                g.appendChild(document.createTextNode(tok[i].data));
+            }
+            tok[i]["e"] = g;
         }
         else if (tok[i].type == 7){
             // Quoted
@@ -305,7 +411,6 @@ function avEl(obj){
 
 // Execute JSONP embedded function on returned data
 function appEl(obj){
-    console.log(obj.id);
     var chk = obj.id.replace(/\//g,'');
     if (chk == ('a' + jn.toString(16) + '.js')){
         // Get container
