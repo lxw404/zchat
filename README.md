@@ -32,9 +32,11 @@ Navigate to the page: [http://localhost:8081](http://localhost:8081) and you wil
 The syntax is as follows:
 
 * Basic text is rendered without any special characters attached.
-* *Italic* text results from any text between one asterix symbol: (eg `*this will render italic*`)
-* **Bold** text results from any text between two asterix symbols: (eg: `**this will render bold**`)
-* ***Bold + Italic*** text results from any text between three asterix symbols: (eg `***this will be bold+italic***`)
+* *Italic* text results from any text between one asterix symbol: (eg. `*this will render italic*`)
+* **Bold** text results from any text between two asterix symbols: (eg. `**this will render bold**`)
+* ***Bold + Italic*** text results from any text between three asterix symbols: (eg. `***this will be bold+italic***`)
+* ~~Strikethrough~~ text results from any text between two tilde symbols: (eg. `~~this will be strikethrough~~`)
+* <u>Underlined</u> text results from any text between underscores: (eg. `_this will be underlined_`) 
 * Media (eg images or videos) are rendered by using the syntax: `![http://link_to_media.png]`
 * Formatting is accomplished via the syntax: `{text you want to format;<rule1>=<value>, <rule2>=<value>}`.  The following formatting rules are included:
   * Color is specified with either `color=<colorname>` or by `color=#RRGGBB`.  You can also exclude the `color` keyword for simplicity as long as it is the first parameter.  Examples: `{This text will be red;red}`, `{This text will be blue;#0000FF}`, `{This text will be rainbow;rainbow}`, `{This text will blink;blink}`
