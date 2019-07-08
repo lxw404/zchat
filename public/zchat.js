@@ -212,14 +212,14 @@ function elP(el, str, scr, dat){
     
     // Loop through all tokens and append them to the element
     for (var i=0; i<tok.length; i++){
+        var dd = tok[i].data;
+        if (i==0 && dd.substring(0,3) == '/me'){
+            // IC Chat
+            dd = dat.dname + dd.substring(3,dd.length);
+            el.removeChild(el.firstChild);
+        }
         if (tok[i].type == 0){
             // Normal text
-            var dd = tok[i].data;
-            if (i==0 && dd.substring(0,3) == '/me'){
-                // IC Chat
-                dd = dat.dname + dd.substring(3,dd.length);
-                el.removeChild(el.firstChild);
-            }
             el.appendChild(document.createTextNode(dd));
         }
         else if (tok[i].type == 1){
@@ -259,15 +259,15 @@ function elP(el, str, scr, dat){
             if (tok[i].con != undefined){
                 g = tok[tok[i].con].e;
                 g.className += ' bold';
-                if (g.textContent.length > tok[i].data.length){
+                if (g.textContent.length > dd.length){
                     g.removeChild(g.firstChild);
-                    g.appendChild(document.createTextNode(tok[i].data));
+                    g.appendChild(document.createTextNode(dd));
                 }
             }
             else {
                 g = document.createElement('span');
                 g.className = 'bold';
-                g.appendChild(document.createTextNode(tok[i].data));
+                g.appendChild(document.createTextNode(dd));
                 el.appendChild(g);
             }
             tok[i]["e"] = g;
@@ -278,15 +278,15 @@ function elP(el, str, scr, dat){
             if (tok[i].con != undefined){
                 g = tok[tok[i].con].e;
                 g.className += ' it';
-                if (g.textContent.length > tok[i].data.length){
+                if (g.textContent.length > dd.length){
                     g.removeChild(g.firstChild);
-                    g.appendChild(document.createTextNode(tok[i].data));
+                    g.appendChild(document.createTextNode(dd));
                 }
             }
             else {
                 g = document.createElement('span');
                 g.className = 'it';
-                g.appendChild(document.createTextNode(tok[i].data));
+                g.appendChild(document.createTextNode(dd));
                 el.appendChild(g);
             }
             tok[i]["e"] = g;
@@ -297,15 +297,15 @@ function elP(el, str, scr, dat){
             if (tok[i].con != undefined){
                 g = tok[tok[i].con].e;
                 g.className += ' bold it';
-                if (g.textContent.length > tok[i].data.length){
+                if (g.textContent.length > dd.length){
                     g.removeChild(g.firstChild);
-                    g.appendChild(document.createTextNode(tok[i].data));
+                    g.appendChild(document.createTextNode(dd));
                 }
             }
             else {
                 g = document.createElement('span');
                 g.className = 'bold it';
-                g.appendChild(document.createTextNode(tok[i].data));
+                g.appendChild(document.createTextNode(dd));
                 el.appendChild(g);
             }
             tok[i]["e"] = g;
@@ -316,15 +316,15 @@ function elP(el, str, scr, dat){
             if (tok[i].con != undefined){
                 g = tok[tok[i].con].e;
                 g.className += ' udl';
-                if (g.textContent.length > tok[i].data.length){
+                if (g.textContent.length > dd.length){
                     g.removeChild(g.firstChild);
-                    g.appendChild(document.createTextNode(tok[i].data));
+                    g.appendChild(document.createTextNode(dd));
                 }
             }
             else {
                 g = document.createElement('span');
                 g.className = 'udl';
-                g.appendChild(document.createTextNode(tok[i].data));
+                g.appendChild(document.createTextNode(dd));
                 el.appendChild(g);
             }
             tok[i]["e"] = g;
@@ -335,15 +335,15 @@ function elP(el, str, scr, dat){
             if (tok[i].con != undefined){
                 g = tok[tok[i].con].e;
                 g.className += ' stk';
-                if (g.textContent.length > tok[i].data.length){
+                if (g.textContent.length > dd.length){
                     g.removeChild(g.firstChild);
-                    g.appendChild(document.createTextNode(tok[i].data));
+                    g.appendChild(document.createTextNode(dd));
                 }
             }
             else {
                 g = document.createElement('span');
                 g.className = 'stk';
-                g.appendChild(document.createTextNode(tok[i].data));
+                g.appendChild(document.createTextNode(dd));
                 el.appendChild(g);
             }
             tok[i]["e"] = g;
@@ -378,12 +378,12 @@ function elP(el, str, scr, dat){
                 }
             }
             if (c == undefined){
-                g.appendChild(document.createTextNode(tok[i].data));
+                g.appendChild(document.createTextNode(dd));
                 el.appendChild(g);
             }
-            else if (g.textContent.length > tok[i].data.length){
+            else if (g.textContent.length > dd.length){
                 g.removeChild(g.firstChild);
-                g.appendChild(document.createTextNode(tok[i].data));
+                g.appendChild(document.createTextNode(dd));
             }
             tok[i]["e"] = g;
         }
