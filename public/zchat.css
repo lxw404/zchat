@@ -66,11 +66,11 @@ img{
 }
 
 .udl{
-    text-decoration: underline;
+  text-decoration: underline;
 }
 
 .stk{
-    text-decoration: line-through;
+  text-decoration: line-through;
 }
 
 .blink_red{
@@ -90,4 +90,49 @@ img{
   /*border: 2px dotted white;*/
   -webkit-background-clip: text;
   background-clip: text;
+}
+
+.hyl {
+  position: relative;
+  text-decoration: underline;
+  color: #00F;
+  cursor: pointer;
+}
+
+.hyl:hover {
+  color: #0AF;
+}
+
+.ttip {
+  visibility: hidden;
+  font-size: 0.7em;
+  width: 125px;
+  background-color: #555;
+  color: #fff;
+  text-align: center;
+  border-radius: 20px;
+  padding: 5px;
+  position: absolute;
+  z-index: 1;
+  bottom: 100%;
+  left: 50%;
+  margin-left: -75px;
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+.ttip:after {
+  content: "";
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  margin-left: -5px;
+  border-width: 5px;
+  border-style: solid;
+  border-color: #555 transparent transparent transparent;
+}
+
+.hyl:hover .ttip {
+  visibility: visible;
+  opacity: 1;
 }

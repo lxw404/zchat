@@ -1,6 +1,25 @@
 var uStore = {}; // Storage of avatar images
 var jn = 0;      // Current request number
 
+// Hyperlink click
+function hlc(e){
+    e.firstChild.innerHTML = '';
+    var r = document.createRange();
+    r.selectNode(e);
+    window.getSelection().removeAllRanges();
+    window.getSelection().addRange(r);
+    document.execCommand('copy');
+    window.getSelection().removeAllRanges();
+    
+    // Change tooltip text
+    e.firstChild.innerHTML = 'Copied';
+}
+
+// Hyperlink hover
+function hlm(e){
+    e.firstChild.innerHTML = 'Copy to clipboard';
+}
+
 // Is an element contained within two index boundaries?
 function conT(e, ind, end){
     return ((ind > e.ind) && (end < e.end));
@@ -108,6 +127,10 @@ function addT(t, str, reg, typ){
                 xd[t4] = t5;
             }
         }
+        else if (typ == 10){
+            i0 = 0;
+            i1 = mat[0].length;
+        }
         d = mat[0].substring(i0, i1);
         t.push({
             "type": ta,
@@ -156,6 +179,9 @@ function elP(el, str, scr, dat){
     // Find links
     pat = /\[([^\[]+)\]\(([^\)]+)\)/g;
     
+    // Find http/https
+    pat = /https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)/g;
+    addT(tok, str, pat, 10);
     
     // Sort tokens
     tok.sort(function(a,b){
@@ -387,9 +413,22 @@ function elP(el, str, scr, dat){
             }
             tok[i]["e"] = g;
         }
-        else if (tok[i].type == 7){
+        else if (tok[i].type == 9){
             // Quoted
             
+        }
+        else if (tok[i].type == 10){
+            // Hyperlinks
+            var tt = document.createElement('div');
+            tt.innerHTML = 'Copy to clipboard';
+            tt.className = 'ttip';
+            g = document.createElement('span');
+            g.setAttribute('onclick', 'hlc(this);');
+            g.setAttribute('onmouseout', 'hlm(this);');
+            g.className = 'hyl';
+            g.appendChild(tt);
+            g.appendChild(document.createTextNode(dd));
+            el.appendChild(g);
         }
     }
     
