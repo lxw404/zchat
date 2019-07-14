@@ -8,8 +8,7 @@
     "dependencies": {
         "express": "latest",
         "readline": "latest",
-        "jquery": "^3.4.1",
-        "magnific-popup": "latest"
+        "jquery": "^3.4.1"
     },
     "devDependencies": {
         "tinyify": "^2.5.1"
