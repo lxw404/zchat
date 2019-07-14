@@ -44,8 +44,8 @@ function zim(e){
         var sc = (e.height/th);
         var x1 = (r.right - r.left)/2.0;
         var y1 = (r.bottom - r.top)/2.0;
-        var x0 = x1 - $(window).width()/(2.0*sc);
-        var y0 = y1 - $(window).height()/(2.0*sc);
+        var x0 = (sc*($(window).width()/(2.0)) - x1)/(sc-1.0);
+        var y0 = (sc*($(window).height()/(2.0)) - y1)/(sc-1.0);
         
         // Set transform
         this.style.transformOrigin =  x0 + 'px ' + y0 + 'px';
@@ -596,6 +596,7 @@ window.appEl = function(obj){
             if (!obj.data[i].uri){
                 // Create message content
                 var r = document.createElement('div');
+                var ag = document.createElement('a');
                 var g = document.createElement('img');
                 var cc = document.createElement('div');
                 var u = document.createElement('div');
@@ -615,10 +616,12 @@ window.appEl = function(obj){
                 }
                 
                 // Complete image/row creation
+                ag.href = 'secondlife:///app/agent/' + obj.data[i].id + '/about';
                 g.className += ' g_' + obj.data[i].id;
                 g.src = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII='; // Webkit fix
                 g.alt = '';
-                r.appendChild(g);
+                ag.appendChild(g);
+                r.appendChild(ag);
                 u.appendChild(document.createTextNode(obj.data[i].dname + ' (' +obj.data[i].uname + ')'));
                 cc.appendChild(u);
                 cc = elP(cc, obj.data[i].data, scr, obj.data[i]);  // Parse for syntax
