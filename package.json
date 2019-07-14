@@ -7,6 +7,15 @@
     "license": "BSD-3-Clause-Attribution",
     "dependencies": {
         "express": "latest",
-        "readline": "latest"
+        "readline": "latest",
+        "jquery": "^3.4.1",
+        "magnific-popup": "latest"
+    },
+    "devDependencies": {
+        "tinyify": "^2.5.1"
+    },
+    "scripts": {
+        "build": "browserify --s zch public/zchat.js -p tinyify -o public/dist/zchat.min.js",
+        "start": "npm run build && node server.js"
     }
 }

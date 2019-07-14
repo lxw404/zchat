@@ -1,8 +1,105 @@
+// Exports
+module.exports = {
+    zim: zim,
+    cim: cim,
+    hlc: hlc,
+    hlm: hlm
+};
+
+// Includes
+$ = require("jquery");
+//modal = require('magnific-popup');
+
+// Globals
 var uStore = {}; // Storage of avatar images
 var jn = 0;      // Current request number
 
+// Zoom image
+function zim(e){
+    // Set modal content
+    var m = $('#mod');
+    var c = $('#mod-con');
+    var p = document.createElement('span');
+    var im = document.createElement('img');
+    var s = e.src;
+    var r = e.getBoundingClientRect();
+    var tt = document.createElement('div');
+    tt.innerHTML = 'Copy to clipboard';
+    tt.className = 'ttip';
+    im.src = s;
+    im.style.display = 'none';
+    //im.className = 'mii';
+    //im.style.top = r.top + 'px';
+    //im.style.left = r.left + 'px';
+    //im.style.transformOrigin = '';
+    //im.style.transform = 'scale()';
+    //im.style.width = (r.right - r.left) + 'px';
+    //im.style.height = (r.bottom - r.top) + 'px';
+    //var mm = new Image();
+    //mm.src = s;
+    im.addEventListener('load', function(){
+        // Get real height and width
+        var th = this.height;
+        var tw = this.width;
+        var sc = (e.height/th);
+        var x1 = (r.right - r.left)/2.0;
+        var y1 = (r.bottom - r.top)/2.0;
+        var x0 = x1 - $(window).width()/(2.0*sc);
+        var y0 = y1 - $(window).height()/(2.0*sc);
+        
+        // Set transform
+        this.style.transformOrigin =  x0 + 'px ' + y0 + 'px';
+        this.style.transform = sc;
+        
+        // Unhide
+        this.style.display = '';
+        
+        // Wait short duration
+        setTimeout(function(){
+            // Set properties
+            //im.style.height = th;
+            //im.style.width = tw;
+            /*if (th > tw){
+                im.style.maxHeight = '100%';
+                im.style.maxWidth = '';
+            }
+            else {
+                im.style.maxWidth = '100%';
+                im.style.maxHeight = '';
+            }*/
+            //im.style.top = '';
+            //im.style.left = '';
+            im.className = 'mim';
+            im.style.transform = '';
+        }, 200);
+    });
+    p.className = 'mod-cap';
+    p.id = 'mod-cap';
+    p.setAttribute('onclick', 'zch.hlc(this);');
+    p.setAttribute('onmouseout', 'zch.hlm(this);');
+    p.append(tt);
+    p.append(document.createTextNode(s));
+    c.append(im);
+    c.append(p);
+    
+    // Show modal
+    m.css('display', 'block');
+}
+
+// Close modal
+function cim(){
+    // Hide modal
+    var m = $('#mod');
+    m.css('display', 'none');
+    
+    // Clear content
+    var c = $('#mod-con');
+    c.empty();
+}
+
 // Hyperlink click
 function hlc(e){
+    // Copy inner contents to clipboard
     e.firstChild.innerHTML = '';
     var r = document.createRange();
     r.selectNode(e);
@@ -128,6 +225,12 @@ function addT(t, str, reg, typ){
             }
         }
         else if (typ == 10){
+            var ct = conT(t, ind, end);
+            if (t.find(function(e){
+                return ((ind >= e.ind) && (end <= e.end));
+            })){
+                continue;
+            }
             i0 = 0;
             i1 = mat[0].length;
         }
@@ -251,7 +354,25 @@ function elP(el, str, scr, dat){
         else if (tok[i].type == 1){
             // Image
             var g = document.createElement('img');
+            g.className = 'zimg';
+            g.setAttribute('onclick', 'zch.zim(this);');
             g.src = tok[i].data;
+            /*$(g).magnificPopup({
+                type: 'image',
+                items: {
+                    src: tok[i].data
+                },
+                image: {
+                    titleSrc: function(e){
+                        return '<span class="mod-cap">' + e.src + '</span>';
+                    }
+                },
+                zoom: {
+                    enabled: true, // By default it's false, so don't forget to enable it
+                    duration: 300, // duration of the effect, in milliseconds
+                    easing: 'ease-in-out', // CSS transition easing function
+                }
+            });*/
             if (scr){
                 g.addEventListener('load', function(){
                     // Scroll to the bottom
@@ -386,7 +507,9 @@ function elP(el, str, scr, dat){
             }
             var ks = Object.keys(tok[i].xd);
             var vv = '';
-            for (var k of ks){
+            var k = '';
+            for (var jj=0; jj<ks.length; jj++){
+                k = ks[jj];
                 vv = document.createElement('div');
                 vv.appendChild(document.createTextNode(tok[i].xd[k]));
                 vv = vv.innerHTML;
@@ -423,8 +546,8 @@ function elP(el, str, scr, dat){
             tt.innerHTML = 'Copy to clipboard';
             tt.className = 'ttip';
             g = document.createElement('span');
-            g.setAttribute('onclick', 'hlc(this);');
-            g.setAttribute('onmouseout', 'hlm(this);');
+            g.setAttribute('onclick', 'zch.hlc(this);');
+            g.setAttribute('onmouseout', 'zch.hlm(this);');
             g.className = 'hyl';
             g.appendChild(tt);
             g.appendChild(document.createTextNode(dd));
@@ -436,7 +559,7 @@ function elP(el, str, scr, dat){
 }
 
 // Execute JSONP embedded function on avatar image return
-function avEl(obj){
+window.avEl = function(obj){
     if ((obj.data != '') && (uStore[obj.id] != '_')){
         // Add the image to the stylesheet
         uStore[obj.id] = '_';  // Mark complete
@@ -449,7 +572,7 @@ function avEl(obj){
 }
 
 // Execute JSONP embedded function on returned data
-function appEl(obj){
+window.appEl = function(obj){
     var chk = obj.id.replace(/\//g,'');
     if (chk == ('a' + jn.toString(16) + '.js')){
         // Get container
@@ -528,3 +651,31 @@ function onT(){
 
 // Repeatedly poll the server
 var si = setInterval(onT,1000);
+
+// On document load, add content
+$(document).ready(function(){
+    // Add modal
+    var mod = document.createElement('div');
+    var modx = document.createElement('span');
+    var modc = document.createElement('div');
+    //var modp = document.createElement('span');
+    mod.className = 'mod';
+    mod.id = 'mod';
+    modx.className = 'mod-x';
+    modx.id = 'mod-x';
+    modx.innerHTML = '&times;';
+    modx.setAttribute('onclick', 'zch.cim();');
+    modc.className = 'mod-con';
+    modc.id = 'mod-con';
+    modc.addEventListener('click', function(e){
+        if (e.target === this){
+            cim();
+        }
+    });
+    //modp.className = 'mod-cap';
+    //modp.id = 'mod-cap';
+    mod.appendChild(modx);
+    mod.appendChild(modc);
+    //mod.appendChild(modp);
+    $('body').append(mod);
+});

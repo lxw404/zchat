@@ -7,6 +7,7 @@ This project contains the frontend and a backend testbench for the `zchat` appli
 The following are required to use the testbench:
 
 * [Node.js](https://nodejs.org/)
+* [Browserify](http://browserify.org/)
 
 ## Setup
 Navigate to the base folder and run:
@@ -18,10 +19,10 @@ $ npm install
 This will install all requirements for the local project.  Then to start the server, run:
 
 ```bash
-$ node server.js
+$ npm start
 ```
 
-This will begin an interactive session where you can type messages into the terminal and have it render in a web browser.
+This will first compile and compress the client javascript and then begin an interactive session where you can type messages into the terminal and have it render in a web browser.
 
 Navigate to the page: [http://localhost:8081](http://localhost:8081) and you will see the empty client.  Whenever you type a message into the server console, it should render to this client.
 

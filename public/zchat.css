@@ -20,6 +20,96 @@ img{
   max-width: 400px;
 }
 
+.mod{
+  display: none;
+  position: fixed;
+  z-index: 4;
+  height: 100%;
+  width: 100%;
+  left: 0;
+  top: 0;
+  background-color: rgb(0,0,0,0.5);
+  transition: 0.3s;
+  vertical-align: middle;
+}
+
+.mod-con{
+  margin: auto;
+  padding: 20px;
+  height: 100%;
+  width: 100%;
+}
+
+.mod-con img{
+  position: static;
+  transition: 0.3s;
+}
+
+/*.mod-con .mii{
+  transition: 0.3s;
+}*/
+
+.mod-con .mim{
+  display: block;
+  margin: auto;
+  overflow: hidden;
+  width: auto;
+  height: auto;
+  /*width: 100%;
+  height: 100%;*/
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+  object-position: center;
+  padding-bottom: 30px;
+  transform: scale(1.0);
+  transition: 0.3s;
+}
+
+.mod-cap{
+  display: block;
+  position: relative;
+  text-decoration: underline;
+  text-align: center;
+  padding-top: 0px;
+  color: #DDD;
+  width: 100%;
+  padding-left: 20px;
+  padding-right: 20px;
+  cursor: pointer;
+  top: -25px;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  transition: 0.2s;
+}
+
+.mod-cap:hover{
+  color: #999;
+}
+
+.mod-cap:hover .ttip {
+  visibility: visible;
+  opacity: 1;
+}
+
+.mod-x{
+  position: absolute;
+  top: 15px;
+  right: 35px;
+  color: #f1f1f1;
+  font-size: 40px;
+  font-weight: bold;
+  z-index: 9;
+  transition: 0.3s;
+}
+
+.mod-x:hover,
+.mod-x:focus{
+  color: #bbb;
+  text-decoration: none;
+  cursor: pointer;
+}
+
 .con{
   width: 100%;
   padding: 20px 20px 0px 20px;
@@ -50,6 +140,10 @@ img{
   margin-right: 10px;
   box-shadow: 1px 1px 5px rgba(0,0,0,0.7);
   background-image: url(https://cdn.pixabay.com/photo/2016/08/08/09/17/avatar-1577909_960_720.png);
+}
+
+.zimg {
+  cursor: pointer;
 }
 
 .uname {
