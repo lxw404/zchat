@@ -15,6 +15,8 @@
     },
     "scripts": {
         "build": "browserify --s zch public/zchat.js -p tinyify -o public/dist/zchat.min.js",
+        "build-debug": "browserify --s zch public/zchat.js -o public/dist/zchat.min.js",
+        "debug": "npm run build-debug && node server.js",
         "start": "npm run build && node server.js"
     }
 }

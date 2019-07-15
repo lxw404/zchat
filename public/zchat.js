@@ -332,10 +332,20 @@ function elP(el, str, scr, dat){
     
     // Containment pass
     var cn = -1;
+    var tty = '';
     for (var i=0; i<tok.length; i++){
         cn = tok.findIndex(function(e){ return conT(e, tok[i].ind, tok[i].end) });
         if (cn != -1){
-            tok[i]["con"] = cn;
+            // Handle invalid types
+            tty = tok[cn].type;
+            if (tty != 1 && tty != 2){
+                tok[i]["con"] = cn;
+            }
+            else {
+                // Remove token on invalid
+                tok.splice(i,1);
+                i--;
+            }
         }
     }
     
@@ -405,10 +415,14 @@ function elP(el, str, scr, dat){
             var g = '';
             if (tok[i].con != undefined){
                 g = tok[tok[i].con].e;
-                g.className += ' bold';
-                if (g.textContent.length > dd.length){
-                    g.removeChild(g.firstChild);
-                    g.appendChild(document.createTextNode(dd));
+                
+                // Handle invalid
+                if (g != undefined){
+                    g.className += ' bold';
+                    if (g.textContent.length > dd.length){
+                        g.removeChild(g.firstChild);
+                        g.appendChild(document.createTextNode(dd));
+                    }
                 }
             }
             else {
@@ -424,10 +438,14 @@ function elP(el, str, scr, dat){
             var g = '';
             if (tok[i].con != undefined){
                 g = tok[tok[i].con].e;
-                g.className += ' it';
-                if (g.textContent.length > dd.length){
-                    g.removeChild(g.firstChild);
-                    g.appendChild(document.createTextNode(dd));
+                
+                // Handle invalid
+                if (g != undefined){
+                    g.className += ' it';
+                    if (g.textContent.length > dd.length){
+                        g.removeChild(g.firstChild);
+                        g.appendChild(document.createTextNode(dd));
+                    }
                 }
             }
             else {
@@ -443,10 +461,14 @@ function elP(el, str, scr, dat){
             var g = '';
             if (tok[i].con != undefined){
                 g = tok[tok[i].con].e;
-                g.className += ' bold it';
-                if (g.textContent.length > dd.length){
-                    g.removeChild(g.firstChild);
-                    g.appendChild(document.createTextNode(dd));
+                
+                // Handle invalid
+                if (g != undefined){
+                    g.className += ' bold it';
+                    if (g.textContent.length > dd.length){
+                        g.removeChild(g.firstChild);
+                        g.appendChild(document.createTextNode(dd));
+                    }
                 }
             }
             else {
@@ -462,10 +484,14 @@ function elP(el, str, scr, dat){
             var g = '';
             if (tok[i].con != undefined){
                 g = tok[tok[i].con].e;
-                g.className += ' udl';
-                if (g.textContent.length > dd.length){
-                    g.removeChild(g.firstChild);
-                    g.appendChild(document.createTextNode(dd));
+                
+                // Handle links with underscores
+                if (g != undefined){
+                    g.className += ' udl';
+                    if (g.textContent.length > dd.length){
+                        g.removeChild(g.firstChild);
+                        g.appendChild(document.createTextNode(dd));
+                    }
                 }
             }
             else {
@@ -481,10 +507,14 @@ function elP(el, str, scr, dat){
             var g = '';
             if (tok[i].con != undefined){
                 g = tok[tok[i].con].e;
-                g.className += ' stk';
-                if (g.textContent.length > dd.length){
-                    g.removeChild(g.firstChild);
-                    g.appendChild(document.createTextNode(dd));
+                
+                // Handle invalid
+                if (g != undefined){
+                    g.className += ' stk';
+                    if (g.textContent.length > dd.length){
+                        g.removeChild(g.firstChild);
+                        g.appendChild(document.createTextNode(dd));
+                    }
                 }
             }
             else {
