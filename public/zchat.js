@@ -646,13 +646,15 @@ window.appEl = function(obj){
                 }
                 
                 // Complete image/row creation
+                var avt = obj.data[i].dname + ' (' +obj.data[i].uname + ')';
                 ag.href = 'secondlife:///app/agent/' + obj.data[i].id + '/about';
                 g.className += ' g_' + obj.data[i].id;
                 g.src = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII='; // Webkit fix
                 g.alt = '';
+                g.title = avt;
                 ag.appendChild(g);
                 r.appendChild(ag);
-                u.appendChild(document.createTextNode(obj.data[i].dname + ' (' +obj.data[i].uname + ')'));
+                u.appendChild(document.createTextNode(avt));
                 cc.appendChild(u);
                 cc = elP(cc, obj.data[i].data, scr, obj.data[i]);  // Parse for syntax
                 r.appendChild(cc);
