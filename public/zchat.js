@@ -18,7 +18,7 @@ var jn = 0;      // Current request number
 function zim(e){
     // Set modal content
     var m = $('#mod');
-    var c = $('#mod-con');
+    var c = $('#mod-d');
     var p = document.createElement('span');
     var im = document.createElement('img');
     var s = e.src;
@@ -93,7 +93,7 @@ function cim(){
     m.css('display', 'none');
     
     // Clear content
-    var c = $('#mod-con');
+    var c = $('#mod-d');
     c.empty();
 }
 
@@ -693,6 +693,7 @@ $(document).ready(function(){
     var mod = document.createElement('div');
     var modx = document.createElement('span');
     var modc = document.createElement('div');
+    var modd = document.createElement('div');
     //var modp = document.createElement('span');
     mod.className = 'mod';
     mod.id = 'mod';
@@ -702,6 +703,8 @@ $(document).ready(function(){
     modx.setAttribute('onclick', 'zch.cim();');
     modc.className = 'mod-con';
     modc.id = 'mod-con';
+    modd.className = 'mod-d';
+    modd.id = 'mod-d';
     modc.addEventListener('click', function(e){
         if (e.target === this){
             cim();
@@ -709,6 +712,7 @@ $(document).ready(function(){
     });
     //modp.className = 'mod-cap';
     //modp.id = 'mod-cap';
+    modc.appendChild(modd);
     mod.appendChild(modx);
     mod.appendChild(modc);
     //mod.appendChild(modp);
